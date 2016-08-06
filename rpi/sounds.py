@@ -36,8 +36,10 @@ def _play(n, sounds):
 
 
 def play_remote_sound(idx):
+    print("playing remote sound {}".format(idx))
     _play(idx, sounds["there"])
 
 
 def play_local_sound(idx):
+    print("playing local sound {}".format(idx))
     _play(idx, sounds["here"])

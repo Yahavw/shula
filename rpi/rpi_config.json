@@ -1,5 +1,6 @@
 {
     "tree_name": "elfdans",
-    "other_trees": [{"othertreename": "192.168.2.123"}],
-    "connect_to": ["othertreename"]
+    "other_trees": {"othertreename": "192.168.2.123",
+                    "tree2": "192.168.1.2"},
+    "connect_to": ["tree2"]
 }
