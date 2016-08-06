@@ -2,7 +2,7 @@ import zmq
 
 from txzmq import ZmqEndpoint, ZmqFactory, ZmqSubConnection
 
-from rpi.config import TREENAME, zmq_ip, ZMQ_PORT, local_configs
+from rpi.config import ZMQ_PORT, local_configs
 
 ## publisher
 _context = zmq.Context()
@@ -11,15 +11,14 @@ _pub_socket.bind("tcp://*:{}".format(ZMQ_PORT))
 
 
 def zmq_publish(msg):
-    message = "{this_tree_name} {msg}".format(
-        this_tree_name=TREENAME, msg=msg)
-    print('publising "{}" to peers via 0mq'.format(message))
-    _pub_socket.send(message)
+    print('publishing "{}" to peers via 0mq'.format(msg))
+    _pub_socket.send(msg)
 
 
 ###### subscriber, for twisted ######
 zf = ZmqFactory()
 subscriber = ZmqSubConnection(zf)
+
 
 def _create_endpoint(treename):
     return ZmqEndpoint("connect", "tcp://{}:{}".format(

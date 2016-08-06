@@ -6,10 +6,13 @@ from twisted.internet import reactor
 from twisted.internet.serialport import SerialPort
 from twisted.protocols import basic
 
-from rpi.sounds import play_local_sound, play_remote_sound
+from rpi.config import TREENAME
 from rpi.peers import zmq_publish
+from rpi.sounds import play_local_sound, play_remote_sound
+
 
 arduino = None
+
 
 def write_to_arduino(msg):
     print("writing to arduino: {}".format(msg))
@@ -38,7 +41,7 @@ def handleOtherTreeMessage(message):
         write_to_arduino("{} {}".format(sensor_no, value))
 
 
-### serial listener from arduino
+# serial listener from arduino
 class ArduinoReceiver(basic.LineOnlyReceiver):
     # delimiter = b'\n'           # \r\n is used by Serial.println
 
@@ -50,22 +53,24 @@ class ArduinoReceiver(basic.LineOnlyReceiver):
             print("got a bad message from serial: {}".format(line))
             return
         play_local_sound(sensor_no)
-        zmq_publish("{}".format(line))
-        print("lineReceived done")
+        zmq_publish("{} {}".format(TREENAME, line))
 
 
 def start(tty=None):
     """
     run with $ python -c 'from rpi.main import start; start()'
-    tty is for testing (with socat, for example)
+    tty is for testing (with socat, for example, tty="/dev/pts/XYZ")
     """
     # listen to arduino
                                 # "/dev/pts/{}".format(28)
-    SerialPort(ArduinoReceiver(), tty or find_tty(), reactor, 115200)
+    if tty is None:
+        tty = find_tty()
+
+    SerialPort(ArduinoReceiver(), tty, reactor, 115200)
 
     # configure arduino for writing
     global arduino
-    arduino = Serial(tty or find_tty(), 115200)
+    arduino = Serial(tty, 115200)
 
     from rpi.peers import subscriber
     subscriber.subscribe("tree2")  # CONFIGURE ME
