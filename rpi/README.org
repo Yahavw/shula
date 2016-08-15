@@ -1,0 +1,32 @@
+#+TITLE: README
+#+DATE: <2016-08-15 Mon>
+#+AUTHOR: Aviad Reich
+#+EMAIL: avreich@Satyagraha
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:t
+#+OPTIONS: e:t email:nil f:t inline:t num:t p:nil pri:nil stat:t
+#+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:t todo:t |:t
+#+CREATOR: Emacs 24.5.1 (Org mode 8.2.10)
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+
+* Install
+#+BEGIN_SRC shell
+pip install -r requirements.txt
+#+END_SRC
+
+* Running
+#+BEGIN_SRC shell
+python -c 'from rpi.main import start; start()'
+#+END_SRC
+
+* Testing
+** run socat
+** get socat sockets (/dev/pts/XYZ)
+** run binding to a specific socekt
+#+BEGIN_SRC shell
+python -c 'from rpi.main import start; start(tty="/dev/pts/XYZ")'
+#+END_SRC

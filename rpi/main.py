@@ -52,7 +52,8 @@ class ArduinoReceiver(basic.LineOnlyReceiver):
         except ValueError:
             print("got a bad message from serial: {}".format(line))
             return
-        play_local_sound(sensor_no)
+        if value:               # FIXME: handle not only as binaries
+            play_local_sound(sensor_no)
         zmq_publish("{} {}".format(TREENAME, line))
 
 
