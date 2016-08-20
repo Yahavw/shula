@@ -1,12 +1,13 @@
-void playOther() {
-  int sensor = Serial.readStringUntil(' ').toInt();
-  int mode = Serial.readStringUntil('\n').toInt();
 
-  Serial.println("mode: " + String(mode));
-  if ( mode == 0) {
-    turnOffOther(sensor);
-  } else if (mode == 1) {
-    turnOnOther(sensor);
+
+void playOther() {
+  struct TreeMsg treeMsg;
+  treeMsg = readMsg();
+
+  if ( treeMsg.data == 0) {
+    turnOffOther(treeMsg.sensor);
+  } else if (treeMsg.data == 1) {
+    turnOnOther(treeMsg.sensor);
   }
 }
 
@@ -21,8 +22,7 @@ void turnOnOther(int sensor) {
 // This ardunio sensor send on ping
 void turnOnthis(int sensor) {
   if (not DEBUG  && not thisSensorStatusArray[sensor]) {
-    Serial.println (String(sensor) + " 1");
-    Serial.flush();
+    sendMsg(String(sensor), "1");
   }
   thisSensorStatusArray[sensor] = true;
 }
@@ -30,8 +30,16 @@ void turnOnthis(int sensor) {
 // This ardunio sensor send off ping
 void trunOffThis(int sensor) {
   if (not DEBUG  && thisSensorStatusArray[sensor]) {
-    Serial.println(String(sensor) + " 0");
-    Serial.flush();
+    sendMsg(String(sensor), "0");
   }
   thisSensorStatusArray[sensor] = false;
 }
+
+
+
+void measureCapcitive() {
+  for (int i = 0 ; i < LEDS_NUMBER; i++) {
+    capacitiveArray[i] = cs_12[i].capacitiveSensor(30);
+  }
+}
+
