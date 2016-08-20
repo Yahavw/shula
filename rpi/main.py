@@ -26,7 +26,7 @@ def find_tty():
     if os_name == "Linux":
         return next(glob.iglob("/dev/ttyACM*"))
     elif os_name == "Darwin":   # OSX
-        return next(glob.iglob("/dev/usbmodem*"))
+        return next(glob.iglob("/dev/cu.usbmodem*"))
     elif os_name == "Windows":
         return _find_win_serial_port()
     else:
@@ -96,7 +96,7 @@ def start(tty=None):
     arduino = Serial(tty, 115200)
 
     from rpi.peers import subscriber
-    subscriber.subscribe("tree2")  # CONFIGURE ME
+    subscriber.subscribe("")  # CONFIGURE ME
     subscriber.gotMessage = handleOtherTreeMessage
 
     reactor.run()
