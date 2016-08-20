@@ -28,10 +28,22 @@ def find_tty():
     elif os_name == "Darwin":   # OSX
         return next(glob.iglob("/dev/usbmodem*"))
     elif os_name == "Windows":
-        raise NotImplementedError  # FIXME: using "COM[X]"
+        return _find_win_serial_port()
     else:
         # unsupported OS
         raise NotImplementedError
+
+
+def _find_win_serial_port():
+    for i in range(100):
+        try:
+            port = "COM{}}".format(i)
+            s = Serial(port)
+            s.close()           # release serial
+            return port
+        except:
+            pass
+    raise RuntimeError
 
 
 def __zmq_print(message):
