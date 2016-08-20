@@ -1,4 +1,5 @@
 import glob
+import platform
 
 from serial import Serial
 
@@ -21,7 +22,16 @@ def write_to_arduino(msg):
 
 
 def find_tty():
-    return next(glob.iglob("/dev/ttyACM*"))
+    os_name = platform.system()
+    if os_name == "Linux":
+        return next(glob.iglob("/dev/ttyACM*"))
+    elif os_name == "Darwin":   # OSX
+        return next(glob.iglob("/dev/usbmodem*"))
+    elif os_name == "Windows":
+        raise NotImplementedError  # FIXME: using "COM[X]"
+    else:
+        # unsupported OS
+        raise NotImplementedError
 
 
 def __zmq_print(message):
