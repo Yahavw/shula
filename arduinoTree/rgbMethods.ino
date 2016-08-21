@@ -10,7 +10,7 @@ void changeColor(int led, unsigned int ledStatus[6]) {
   ledStatus[ledStatus[INC_COLOR]] += 1;
   strip.setPixelColor(led, ledStatus[RED], ledStatus[GREEN], ledStatus[BLUE]);
   //  delay(5);
-  ledStatus[INDEX] += 2;
+  ledStatus[INDEX] += 1;
 }
 
 void initLedsStatus() {

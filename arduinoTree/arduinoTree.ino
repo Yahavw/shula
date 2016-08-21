@@ -18,9 +18,16 @@
 #define DEC_COLOR 4
 #define INC_COLOR 5
 
+// Send/Receive period time
+#define PERIOD_TIME 10000
+#define TIMEOUT 15000
+
+
 struct TreeMsg {
-  int sensor;
-  int data;
+  int intro;
+  int R;
+  int G;
+  int B;
 } ;
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(30, PIN, NEO_GRB + NEO_KHZ800);
@@ -34,6 +41,8 @@ boolean DEBUG = false;
 boolean thisSensorStatusArray[3] = {false, false, false};
 boolean otherSensorStatusArray[3] = {false, false, false};
 
+boolean shouldPlayOther = false;
+
 // TODO - not in use right now
 unsigned int ledsPinArray[3] = {LED1, LED2, LED3};
 
@@ -45,41 +54,36 @@ long capacitiveArray[LEDS_NUMBER];
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200) ;
+  initLedsStatus();
+
+  // init led strip
   strip.begin();
   strip.setBrightness(64);
-  initLedsStatus();
   strip.show(); // Initialize all pixels to 'off'
-
-  //cs_1_2.set_CS_AutocaL_Millis(0xFFFFFFFF);     // turn off autocalibrate on channel 1 - just as an example
 }
 
 void loop() {
-  long start = millis();
-  measureCapcitive();
-
-  if (DEBUG) {
-    debug_loop(start);
-  }
-  
-  delay(10);                             // arbitrary delay to limit data to serial port
-
-  for (int i = 0; i < LEDS_NUMBER; i++) {
-    if (capacitiveArray[i] > THRESHOLD) {
-//      turnOnthis(i);
-      changeColor(i, ledsStatusArray[i]);
-      sendMsg(String(i), String(ledsStatusArray[i][0]) + String(ledsStatusArray[i][1]) + String(ledsStatusArray[i][2]));  
+  // Check if other sent a massege, if true listen to other until finishing or timeout.
+  if (Serial.available() > 0) {
+    shouldPlayOther = true;
+    long receiveTime = millis();
+    while (shouldPlayOther && receiveTime < TIMEOUT) {
+      if (Serial.available() > 0) {
+        playOtherTree();
+      }
+      delay(10);
     }
-//    else {
-//      trunOffThis(0);
-//    }
   }
 
-//  if (not DEBUG && Serial.available()) {
-//    playOther();
-//  }
-  strip.show();
-
+  long sendTime = millis();
+  sendStartMsg();
+  while (sendTime < PERIOD_TIME) {
+    playThisTree();
+  }
+  sendEndMsg();
+  delay(300);
 }
+
 
 
 
