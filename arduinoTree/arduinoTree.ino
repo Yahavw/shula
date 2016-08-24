@@ -7,7 +7,7 @@
 #define LED2 1
 #define LED3 4
 
-#define THRESHOLD 500
+#define THRESHOLD 200
 #define LEDS_NUMBER 6
 
 // define led status in array
@@ -66,8 +66,10 @@ void loop() {
   // Check if other sent a massege, if true listen to other until finishing or timeout.
   if (Serial.available() > 0) {
     shouldPlayOther = true;
-    long receiveTime = millis();
-    while (shouldPlayOther && receiveTime < TIMEOUT) {
+    strip.setPixelColor(7, 255, 0, 0);
+    strip.show();
+    unsigned long receiveTime = millis();
+    while (shouldPlayOther && (millis() - receiveTime) < TIMEOUT) {
       if (Serial.available() > 0) {
         playOtherTree();
       }
@@ -75,9 +77,11 @@ void loop() {
     }
   }
 
-  long sendTime = millis();
+  unsigned long sendTime = millis();
   sendStartMsg();
-  while (sendTime < PERIOD_TIME) {
+  strip.setPixelColor(7, 0, 255, 0);
+
+  while (millis() - sendTime < PERIOD_TIME) {
     playThisTree();
   }
   sendEndMsg();

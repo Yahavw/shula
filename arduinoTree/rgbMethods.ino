@@ -15,7 +15,7 @@ void changeColor(int led, unsigned int ledStatus[6]) {
 
 void initLedsStatus() {
   for (int i = 0; i < LEDS_NUMBER; i++) {
-    ledsStatusArray[i][0] = 0;
+    ledsStatusArray[i][0] = 255;
     ledsStatusArray[i][1] = 0;
     ledsStatusArray[i][2] = 0;
     ledsStatusArray[i][3] = 0;
