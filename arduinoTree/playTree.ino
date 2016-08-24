@@ -22,6 +22,9 @@ void playThisTree() {
 void playOtherTree() {
   TreeMsg treeMsg = readMsg();
   if (treeMsg.intro != -1) {
+    ledsStatusArray[treeMsg.intro][0] = treeMsg.R;
+    ledsStatusArray[treeMsg.intro][1] = treeMsg.G;
+    ledsStatusArray[treeMsg.intro][2] = treeMsg.B;
     strip.setPixelColor(treeMsg.intro, treeMsg.R, treeMsg.G, treeMsg.B);
   }
 }
