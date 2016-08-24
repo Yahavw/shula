@@ -5,11 +5,11 @@ void sendMsg(struct TreeMsg treeMsg) {
 }
 
 void sendEndMsg() {
-  Serial.println("end ");
+  Serial.println("-2 0 0 0");
 }
 
 void sendStartMsg() {
-  Serial.println("start ");
+  Serial.println("-1 0 0 0");
 }
 
 struct TreeMsg readMsg() {
@@ -17,10 +17,10 @@ struct TreeMsg readMsg() {
   String introMsg = Serial.readStringUntil(' ');
 
   // If message start with 'start' or ' 'end' - return -1
-  if (introMsg == "end") {
+  if (introMsg == "-2") {
     shouldPlayOther = false;
     treeMsg.intro = -1;
-  } else if (introMsg == "start") {
+  } else if (introMsg == "-1") {
     treeMsg.intro = -1;
     Serial.readStringUntil('\n');
   } else {
