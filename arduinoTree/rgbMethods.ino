@@ -28,9 +28,6 @@ void initLedsStatus() {
     ledsStatusArray[i][0] = 255;
     ledsStatusArray[i][1] = 0;
     ledsStatusArray[i][2] = 0;
-    ledsStatusArray[i][3] = 0;
-    ledsStatusArray[i][4] = 0;
-    ledsStatusArray[i][5] = 1;
   }
   strip.show();
 }

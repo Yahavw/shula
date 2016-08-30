@@ -14,9 +14,6 @@
 #define RED 0
 #define GREEN 1
 #define BLUE 2
-#define INDEX 3
-#define DEC_COLOR 4
-#define INC_COLOR 5
 
 // Send/Receive period time
 #define PERIOD_TIME 10000
@@ -47,7 +44,7 @@ boolean shouldPlayOther = false;
 unsigned int ledsPinArray[3] = {LED1, LED2, LED3};
 
 // Hold the each led status
-unsigned int ledsStatusArray[LEDS_NUMBER][6];
+unsigned int ledsStatusArray[LEDS_NUMBER][3];
 
 long capacitiveArray[LEDS_NUMBER];
 
