@@ -1,16 +1,26 @@
 
 // Change 1 rgb led color according to it's status.
 void changeColor(int led, unsigned int ledStatus[6]) {
-  if (ledStatus[INDEX] >= 255) {
-    ledStatus[INDEX] = 0;
-    ledStatus[DEC_COLOR] = (ledStatus[DEC_COLOR] + 1) % 3;
-    ledStatus[INC_COLOR] = ledStatus[DEC_COLOR] == 2 ? 0 : ledStatus[DEC_COLOR] + 1;
-  }
-  ledStatus[ledStatus[DEC_COLOR]] -= 1;
-  ledStatus[ledStatus[INC_COLOR]] += 1;
-  strip.setPixelColor(led, ledStatus[RED], ledStatus[GREEN], ledStatus[BLUE]);
-  //  delay(5);
-  ledStatus[INDEX] += 1;
+        if (ledStatus[RED] == 255) {
+            ledStatus[RED]--;
+            ledStatus[GREEN]++;
+        } else if (ledStatus[GREEN] == 255) {
+            ledStatus[GREEN]--;
+            ledStatus[BLUE]++;
+        } else if (ledStatus[BLUE] == 255) {
+            ledStatus[BLUE]--;
+            ledStatus[RED]++;
+        } else if (ledStatus[BLUE] == 0) {
+            ledStatus[RED]--;
+            ledStatus[GREEN]++;
+        } else if (ledStatus[RED] == 0) {
+            ledStatus[GREEN]--;
+            ledStatus[BLUE]++;
+        } else if (ledStatus[GREEN] == 0) {
+            ledStatus[BLUE]--;
+            ledStatus[RED]++;
+        }
+        strip.setPixelColor(led, ledStatus[RED], ledStatus[GREEN], ledStatus[BLUE]);
 }
 
 void initLedsStatus() {
