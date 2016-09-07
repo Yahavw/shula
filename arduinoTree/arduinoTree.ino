@@ -16,8 +16,8 @@
 #define BLUE 2
 
 // Send/Receive period time
-#define PERIOD_TIME 10000
-#define TIMEOUT 15000
+#define PERIOD_TIME 20000
+#define TIMEOUT 25000
 
 
 struct TreeMsg {
@@ -52,14 +52,15 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200) ;
   initLedsStatus();
-
+  initCapacivite(100);
   // init led strip
   strip.begin();
-  strip.setBrightness(64);
+  strip.setBrightness(255);
   strip.show(); // Initialize all pixels to 'off'
 }
 
 void loop() {
+  Serial.println(millis());
   // Check if other sent a massege, if true listen to other until finishing or timeout.
   if (Serial.available() > 0) {
     shouldPlayOther = true;
