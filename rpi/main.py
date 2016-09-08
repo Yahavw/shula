@@ -53,14 +53,14 @@ def __zmq_print(message):
 
 def handleOtherTreeMessage(message):
     try:
-        source_tree, sensor_no, value = message.strip().split()
+        source_tree, sensor_no, r,g,b = message.strip().split()
     except ValueError:
         print("got a BAD message from 0mq: {!r}".format(message))
     else:
         print("got a GOOD message from 0mq: {!r}".format(message))
-        if int(value) > 0:      # FIXME: handle not only as binaries
+        if int(r) > 0:      # FIXME: handle not only as binaries
             play_remote_sound(int(sensor_no))
-        write_to_arduino("{} {}".format(sensor_no, value))
+        write_to_arduino("{} {} {} {}".format(sensor_no,r,g,b))
 
 
 # serial listener from arduino
@@ -70,12 +70,29 @@ class ArduinoReceiver(basic.LineOnlyReceiver):
     def lineReceived(self, line):
         print("Line received from serial: {!r}".format(line))
         try:
-            sensor_no, value = map(int, line.strip().split())
+            sensor_no, r,g,b = map(int, line.strip().split())
         except ValueError:
             print("got a bad message from serial: {}".format(line))
             return
-        if value:               # FIXME: handle not only as binaries
-            play_local_sound(sensor_no)
+        if line:               # FIXME: handle not only as binaries
+            
+		rgbValue = str(r) + str(g) + str(b)
+		if rgbValue == "25410":
+			play_local_sound(0)
+		if rgbValue == "1271280":
+			play_local_sound(1)
+		if rgbValue == "02541":
+			play_local_sound(2)
+		if rgbValue == "0127128":
+			play_local_sound(3)
+		if rgbValue == "10254":
+			play_local_sound(4)
+		if rgbValue == "1280127":
+			play_local_sound(5)
+		
+	     #play_local_sound(rgbValue)
+	     #print("RGB: ")
+		#print(rgbValue)
         zmq_publish("{} {}".format(TREENAME, line))
 
 
