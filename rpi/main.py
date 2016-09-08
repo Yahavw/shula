@@ -53,14 +53,14 @@ def __zmq_print(message):
 
 def handleOtherTreeMessage(message):
     try:
-        source_tree, sensor_no, r,g,b = message.strip().split()
+        source_tree, sensor_no, r, g, b = message.strip().split()
     except ValueError:
         print("got a BAD message from 0mq: {!r}".format(message))
     else:
         print("got a GOOD message from 0mq: {!r}".format(message))
         if int(r) > 0:      # FIXME: handle not only as binaries
             play_remote_sound(int(sensor_no))
-        write_to_arduino("{} {} {} {}".format(sensor_no,r,g,b))
+        write_to_arduino("{} {} {} {}".format(sensor_no, r, g, b))
 
 
 # serial listener from arduino

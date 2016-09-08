@@ -7,20 +7,24 @@
 #define LED2 1
 #define LED3 4
 
-#define THRESHOLD 500
+#define THRESHOLD 200
 #define LEDS_NUMBER 6
 
 // define led status in array
 #define RED 0
 #define GREEN 1
 #define BLUE 2
-#define INDEX 3
-#define DEC_COLOR 4
-#define INC_COLOR 5
+
+// Send/Receive period time
+#define PERIOD_TIME 20000
+#define TIMEOUT 25000
+
 
 struct TreeMsg {
-  int sensor;
-  int data;
+  int intro;
+  int R;
+  int G;
+  int B;
 } ;
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(30, PIN, NEO_GRB + NEO_KHZ800);
@@ -34,52 +38,54 @@ boolean DEBUG = false;
 boolean thisSensorStatusArray[3] = {false, false, false};
 boolean otherSensorStatusArray[3] = {false, false, false};
 
+boolean shouldPlayOther = false;
+
 // TODO - not in use right now
 unsigned int ledsPinArray[3] = {LED1, LED2, LED3};
 
 // Hold the each led status
-unsigned int ledsStatusArray[LEDS_NUMBER][6];
+unsigned int ledsStatusArray[LEDS_NUMBER][3];
 
 long capacitiveArray[LEDS_NUMBER];
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200) ;
-  strip.begin();
-  strip.setBrightness(64);
   initLedsStatus();
+  initCapacivite(100);
+  // init led strip
+  strip.begin();
+  strip.setBrightness(255);
   strip.show(); // Initialize all pixels to 'off'
-
-  //cs_1_2.set_CS_AutocaL_Millis(0xFFFFFFFF);     // turn off autocalibrate on channel 1 - just as an example
 }
 
 void loop() {
-  long start = millis();
-  measureCapcitive();
-
-  if (DEBUG) {
-    debug_loop(start);
-  }
-  
-  delay(10);                             // arbitrary delay to limit data to serial port
-
-  for (int i = 0; i < LEDS_NUMBER; i++) {
-    if (capacitiveArray[i] > THRESHOLD) {
-//      turnOnthis(i);
-      changeColor(i, ledsStatusArray[i]);
-      sendMsg(String(i), String(ledsStatusArray[i][0]) + String(ledsStatusArray[i][1]) + String(ledsStatusArray[i][2]));  
+  Serial.println(millis());
+  // Check if other sent a massege, if true listen to other until finishing or timeout.
+  if (Serial.available() > 0) {
+    shouldPlayOther = true;
+    strip.setPixelColor(7, 255, 0, 0);
+    strip.show();
+    unsigned long receiveTime = millis();
+    while (shouldPlayOther && (millis() - receiveTime) < TIMEOUT) {
+      if (Serial.available() > 0) {
+        playOtherTree();
+      }
+      delay(10);
     }
-//    else {
-//      trunOffThis(0);
-//    }
   }
 
-//  if (not DEBUG && Serial.available()) {
-//    playOther();
-//  }
-  strip.show();
+  unsigned long sendTime = millis();
+  sendStartMsg();
+  strip.setPixelColor(7, 0, 255, 0);
 
+  while (millis() - sendTime < PERIOD_TIME) {
+    playThisTree();
+  }
+  sendEndMsg();
+  delay(300);
 }
+
 
 
 
