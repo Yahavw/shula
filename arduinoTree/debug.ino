@@ -14,5 +14,8 @@ void debug_loop(long start) {
   Serial.print("\t");
   Serial.print(capacitiveArray[4]);                    // tab character for debug windown spacing
   Serial.print("\t");
-  Serial.println(capacitiveArray[5]);                    // tab character for debug windown spacing
+  Serial.print(capacitiveArray[5]);                    // tab character for debug windown spacing
+  Serial.print("\t");
+  Serial.println(capacitiveArray[6]);                    // tab character for debug windown spacing
+
 }

@@ -1,14 +1,11 @@
+
 #include <Adafruit_NeoPixel.h>
 #include <CapacitiveSensor.h>
 
-#define PIN 13
-
-#define LED1 0
-#define LED2 1
-#define LED3 4
+#define PIN A0
 
 #define THRESHOLD 200
-#define LEDS_NUMBER 6
+#define LEDS_NUMBER 7
 
 // define led status in array
 #define RED 0
@@ -27,21 +24,14 @@ struct TreeMsg {
   int B;
 } ;
 
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(30, PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(LEDS_NUMBER + 1, PIN, NEO_GRB + NEO_KHZ800);
 CapacitiveSensor   cs_12[] = {CapacitiveSensor(12, 2), CapacitiveSensor(12, 3), CapacitiveSensor(12, 4)
-                              , CapacitiveSensor(12, 5), CapacitiveSensor(12, 6), CapacitiveSensor(12, 7)
+                              , CapacitiveSensor(12, 5), CapacitiveSensor(12, 6), CapacitiveSensor(12, 7), CapacitiveSensor(12, 8)
                              };    // 10M resistor between pins 12, pin 2 is sensor pin, add a wire and or foil if desired
 
 boolean DEBUG = false;
 
-// TODO - Handle this for communication
-boolean thisSensorStatusArray[3] = {false, false, false};
-boolean otherSensorStatusArray[3] = {false, false, false};
-
 boolean shouldPlayOther = false;
-
-// TODO - not in use right now
-unsigned int ledsPinArray[3] = {LED1, LED2, LED3};
 
 // Hold the each led status
 unsigned int ledsStatusArray[LEDS_NUMBER][3];
@@ -65,7 +55,6 @@ void loop() {
     while (Serial.available()) {
       TreeMsg treeMsg = readMsg();
       if (treeMsg.intro == -1) {
-        strip.setPixelColor(7, 255, 0, 0);
         break;
       }
     }
@@ -81,7 +70,6 @@ void loop() {
   }
 
   sendStartMsg();
-  strip.setPixelColor(7, 0, 255, 0);
   playFinalMsg();
   unsigned long sendTime = millis();
   while (millis() - sendTime < PERIOD_TIME) {

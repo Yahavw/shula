@@ -13,7 +13,9 @@ void playThisTree() {
     if (capacitiveArray[i] > THRESHOLD) {
       changeColor(i, ledsStatusArray[i]);
       TreeMsg treeMsg = {i, ledsStatusArray[i][0], ledsStatusArray[i][1], ledsStatusArray[i][2]};
-      sendMsg(treeMsg);
+      if (!DEBUG) {
+        sendMsg(treeMsg);
+      }
     }
   }
   strip.show();
@@ -69,18 +71,18 @@ void playFinalMsg() {
     delay(400);
     strip.show();
     delay(200);
-    }
-    delay(600);
-    for (int i = 0; i < LEDS_NUMBER; i++) {
+  }
+  delay(600);
+  for (int i = 0; i < LEDS_NUMBER; i++) {
     strip.setPixelColor(i, ledsStatusArray[i][0], ledsStatusArray[i][1], ledsStatusArray[i][2]);
-    }
-    strip.show();
   }
+  strip.show();
+}
 
-  void startOther() {
-    for (int i = 0; i < LEDS_NUMBER; i++) {
-      strip.setPixelColor(i, 0, 0, 255);
-    }
-    strip.show();
+void startOther() {
+  for (int i = 0; i < LEDS_NUMBER; i++) {
+    strip.setPixelColor(i, 0, 0, 255);
   }
+  strip.show();
+}
 
