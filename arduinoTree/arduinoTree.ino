@@ -17,7 +17,7 @@
 
 // Send/Receive period time
 #define PERIOD_TIME 20000
-#define TIMEOUT 25000
+#define TIMEOUT 30000
 
 
 struct TreeMsg {
@@ -60,13 +60,18 @@ void setup() {
 }
 
 void loop() {
-  Serial.println(millis());
   // Check if other sent a massege, if true listen to other until finishing or timeout.
   if (Serial.available() > 0) {
-    shouldPlayOther = true;
-    strip.setPixelColor(7, 255, 0, 0);
+    while (Serial.available()) {
+      TreeMsg treeMsg = readMsg();
+      if (treeMsg.intro == -1) {
+        strip.setPixelColor(7, 255, 0, 0);
+        break;
+      }
+    }
     strip.show();
     unsigned long receiveTime = millis();
+    startOther();
     while (shouldPlayOther && (millis() - receiveTime) < TIMEOUT) {
       if (Serial.available() > 0) {
         playOtherTree();
@@ -75,15 +80,16 @@ void loop() {
     }
   }
 
-  unsigned long sendTime = millis();
   sendStartMsg();
   strip.setPixelColor(7, 0, 255, 0);
-
+  playFinalMsg();
+  unsigned long sendTime = millis();
   while (millis() - sendTime < PERIOD_TIME) {
     playThisTree();
   }
+  playFinalMsg();
   sendEndMsg();
-  delay(300);
+  delay(1000);
 }
 
 

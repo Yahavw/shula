@@ -6,10 +6,12 @@ void sendMsg(struct TreeMsg treeMsg) {
 
 void sendEndMsg() {
   Serial.println("-2 0 0 0");
+  Serial.flush();
 }
 
 void sendStartMsg() {
   Serial.println("-1 0 0 0");
+  Serial.flush();
 }
 
 struct TreeMsg readMsg() {
@@ -20,8 +22,10 @@ struct TreeMsg readMsg() {
   if (introMsg == "-2") {
     shouldPlayOther = false;
     treeMsg.intro = -1;
+    Serial.readStringUntil('\n');
   } else if (introMsg == "-1") {
     treeMsg.intro = -1;
+    shouldPlayOther = true;
     Serial.readStringUntil('\n');
   } else {
     treeMsg.intro = introMsg.toInt();
