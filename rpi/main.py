@@ -70,12 +70,29 @@ class ArduinoReceiver(basic.LineOnlyReceiver):
     def lineReceived(self, line):
         print("Line received from serial: {!r}".format(line))
         try:
-            sensor_no, r, g, b = map(int, line.strip().split())
+            sensor_no, r,g,b = map(int, line.strip().split())
         except ValueError:
             print("got a bad message from serial: {}".format(line))
             return
-        if r:               # FIXME: handle not only as binaries
-            play_local_sound(sensor_no)
+        if line:               # FIXME: handle not only as binaries
+            
+		rgbValue = str(r) + str(g) + str(b)
+		if rgbValue == "25410":
+			play_local_sound(0)
+		if rgbValue == "1271280":
+			play_local_sound(1)
+		if rgbValue == "02541":
+			play_local_sound(2)
+		if rgbValue == "0127128":
+			play_local_sound(3)
+		if rgbValue == "10254":
+			play_local_sound(4)
+		if rgbValue == "1280127":
+			play_local_sound(5)
+		
+	     #play_local_sound(rgbValue)
+	     #print("RGB: ")
+		#print(rgbValue)
         zmq_publish("{} {}".format(TREENAME, line))
 
 
