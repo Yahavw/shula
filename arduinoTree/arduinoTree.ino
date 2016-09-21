@@ -4,7 +4,7 @@
 
 #define PIN A0
 
-#define THRESHOLD 200
+#define THRESHOLD 350
 #define LEDS_NUMBER 7
 
 // define led status in array
