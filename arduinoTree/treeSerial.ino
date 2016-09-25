@@ -14,12 +14,27 @@ void sendStartMsg() {
   Serial.flush();
 }
 
+void sendPlayMsg() {
+  Serial.println("-3 0 0 0");
+  Serial.flush();
+}
+
+void sendStartOtherMsg() {
+  Serial.println("-4 0 0 0");
+  Serial.flush();
+}
+
 struct TreeMsg readMsg() {
   struct TreeMsg treeMsg;
   String introMsg = Serial.readStringUntil(' ');
 
   // If message start with 'start' or ' 'end' - return -1
-  if (introMsg == "-2") {
+  if (treeMsg.intro > 0) {
+    treeMsg.intro = introMsg.toInt();
+    treeMsg.R = Serial.readStringUntil(' ').toInt();
+    treeMsg.G = Serial.readStringUntil(' ').toInt();
+    treeMsg.B = Serial.readStringUntil('\n').toInt();
+  } else if (introMsg == "-2") {
     shouldPlayOther = false;
     treeMsg.intro = -1;
     Serial.readStringUntil('\n');
@@ -27,12 +42,16 @@ struct TreeMsg readMsg() {
     treeMsg.intro = -1;
     shouldPlayOther = true;
     Serial.readStringUntil('\n');
-  } else {
-    treeMsg.intro = introMsg.toInt();
-    treeMsg.R = Serial.readStringUntil(' ').toInt();
-    treeMsg.G = Serial.readStringUntil(' ').toInt();
-    treeMsg.B = Serial.readStringUntil('\n').toInt();
-  }
+
+  } else if (introMsg == "-3") {
+    treeMsg.intro = -3;
+    Serial.readStringUntil('\n');
+
+  } else if (introMsg == "-4") {
+    treeMsg.intro = -4;
+    Serial.readStringUntil('\n');
+
+  } 
 
   return treeMsg;
 }

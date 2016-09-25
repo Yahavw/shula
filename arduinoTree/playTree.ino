@@ -10,7 +10,7 @@ void playThisTree() {
   delay(10);                             // arbitrary delay to limit data to serial port
 
   for (int i = 0; i < LEDS_NUMBER; i++) {
-    if (capacitiveArray[i] > THRESHOLD) {
+    if (capacitiveArray[i] > threshold) {
       changeColor(i, ledsStatusArray[i]);
       TreeMsg treeMsg = {i, ledsStatusArray[i][0], ledsStatusArray[i][1], ledsStatusArray[i][2]};
       if (!DEBUG) {
@@ -70,7 +70,7 @@ void playFinalMsg() {
     sendMsg(treeMsg);
     delay(400);
     strip.show();
-    delay(200);
+    delay(speedVal);
   }
   delay(600);
   for (int i = 0; i < LEDS_NUMBER; i++) {
@@ -84,5 +84,24 @@ void startOther() {
     strip.setPixelColor(i, 0, 0, 254);
   }
   strip.show();
+}
+
+void playStandby() {
+  for (int j = 1; j < 10; j++) {
+    for (int i = 0; i < LEDS_NUMBER; i++) {
+
+      strip.setPixelColor(i, ledsStatusArray[i][0] / j, ledsStatusArray[i][1] / j, ledsStatusArray[i][2] / j);
+      delay(100 - (j * 10));
+    }
+    strip.show();
+  }
+  for (int j = 10; j > 1; j--) {
+    for (int i = 0; i < LEDS_NUMBER; i++) {
+      strip.setPixelColor(i, ledsStatusArray[i][0] / j, ledsStatusArray[i][1] / j, ledsStatusArray[i][2] / j);
+      delay(100 - (j * 10));
+    }
+    strip.show();
+  }
+
 }
 
