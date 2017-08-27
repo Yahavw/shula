@@ -1,0 +1,9 @@
+[Unit]
+Description=Tree-Project
+
+[Service]
+ExecStart=/home/pi/shula/rpi/init-tree-project.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

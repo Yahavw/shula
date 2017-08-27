@@ -20,6 +20,7 @@ with open(join(dirname(__file__), "rpi_config.json"), 'r') as f:
 
 TREENAME = local_configs['tree_name']
 
+TRACKER = local_configs['tracker']
 
 # cleanup
 del dirname

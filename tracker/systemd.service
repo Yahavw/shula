@@ -1,0 +1,9 @@
+[Unit]
+Description=Tree-Project-Tracker
+
+[Service]
+ExecStart=/root/tracker/tracker.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
