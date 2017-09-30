@@ -2,5 +2,6 @@
     "tree_name": "elfdans",
     "other_trees": {"othertreename": "192.168.2.123",
                     "tree2": "192.168.1.2"},
-    "connect_to": ["tree2"]
+  "connect_to": ["tree2"],
+  "tracker": "tcp://37.139.18.129:26822"
 }

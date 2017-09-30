@@ -1,6 +1,5 @@
 import glob
 import platform
-
 from serial import Serial
 
 from twisted.internet import reactor
@@ -51,15 +50,15 @@ def __zmq_print(message):
     print("s1: got {}".format(message))
 
 
-def handleOtherTreeMessage(message):
+def handle_other_tree_message(message):
     try:
         source_tree, sensor_no, r, g, b = message.strip().split()
     except ValueError:
         print("got a BAD message from 0mq: {!r}".format(message))
     else:
         print("got a GOOD message from 0mq: {!r}".format(message))
-        if int(r) > 0:      # FIXME: handle not only as binaries
-            play_remote_sound(int(sensor_no))
+        #if int(r) > 0:      # FIXME: handle not only as binaries
+          #  play_remote_sound(int(sensor_no))
         write_to_arduino("{} {} {} {}".format(sensor_no, r, g, b))
 
 
@@ -74,22 +73,24 @@ class ArduinoReceiver(basic.LineOnlyReceiver):
         except ValueError:
             print("got a bad message from serial: {}".format(line))
             return
-        if line:               # FIXME: handle not only as binaries
-            
-		rgbValue = str(r) + str(g) + str(b)
-		if rgbValue == "25410":
-			play_local_sound(0)
-		if rgbValue == "1271280":
-			play_local_sound(1)
-		if rgbValue == "02541":
-			play_local_sound(2)
-		if rgbValue == "0127128":
-			play_local_sound(3)
-		if rgbValue == "10254":
-			play_local_sound(4)
-		if rgbValue == "1280127":
-			play_local_sound(5)
-		
+        #if line:               # FIXME: handle not only as binaries
+
+	rgbValue = str(r) + str(g) + str(b)
+	if rgbValue == "000":
+            play_local_sound(8)
+	if rgbValue == "25400":
+	    play_local_sound(0)
+	if rgbValue == "1261280":
+	    play_local_sound(1)
+	if rgbValue == "02540":
+	    play_local_sound(2)
+	if rgbValue == "0126128":
+	    play_local_sound(3)
+	if rgbValue == "00254":
+	    play_local_sound(4)
+	if rgbValue == "1280126":
+	    play_local_sound(5)
+
 	     #play_local_sound(rgbValue)
 	     #print("RGB: ")
 		#print(rgbValue)
@@ -114,6 +115,6 @@ def start(tty=None):
 
     from rpi.peers import subscriber
     subscriber.subscribe("")  # CONFIGURE ME
-    subscriber.gotMessage = handleOtherTreeMessage
+    subscriber.gotMessage = handle_other_tree_message
 
     reactor.run()
